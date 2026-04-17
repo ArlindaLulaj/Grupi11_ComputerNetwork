@@ -1,0 +1,12 @@
+{
+  "name": "grupi11-computer-network",
+  "version": "1.0.0",
+  "description": "TCP client-server project for Computer Networks using Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start:server": "node server.js",
+    "start:client": "node client.js"
+  },
+  "author": "Grupi 11",
+  "license": "ISC"
+}
