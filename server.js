@@ -6,7 +6,6 @@ const HOST = '0.0.0.0';
 const PORT = 5000;
 
 const FILES_DIR = path.join(__dirname, 'server_files');
-const ADMIN_PASSWORD = 'admin123';
 
 if (!fs.existsSync(FILES_DIR)) {
   fs.mkdirSync(FILES_DIR);
@@ -106,12 +105,6 @@ function handleClientMessage(socket, rawMessage) {
 
   console.log(`Client ${socket.id}: ${message}`);
 
-  if (message === `AUTH ${ADMIN_PASSWORD}`) {
-    socket.role = 'admin';
-    socket.write('You are now admin.\n');
-    return;
-  }
-
   if (message.startsWith('MESSAGE ')) {
     const text = message.slice(8).trim();
     socket.write(`Message received: ${text}\n`);
@@ -147,19 +140,30 @@ function handleClientMessage(socket, rawMessage) {
 
 let clientCounter = 0;
 const clients = [];
+let adminAssigned=false;
 
 const server = net.createServer((socket) => {
   clientCounter += 1;
 
   socket.id = clientCounter;
+  if (!adminAssigned) {
+  socket.role = 'admin';
+  adminAssigned = true;
+} else {
   socket.role = 'read-only';
+}
 
   clients.push(socket);
 
-  console.log(`Client ${socket.id} connected.`);
-  socket.write('Connected to TCP server.\n');
-  socket.write('Default role: read-only.\n');
-  socket.write('Use AUTH admin123 to become admin.\n');
+ const clientAddress = `${socket.remoteAddress}:${socket.remotePort}`;
+
+console.log(`Client ${socket.id} connected from ${clientAddress}.`);
+console.log(`Active clients: ${clients.length}`);
+
+socket.write('Connected to TCP server.\n');
+socket.write(`Your client ID is ${socket.id}.\n`);
+socket.write(`Your role is: ${socket.role}\n`);
+
 
   socket.on('data', (data) => {
     const messages = data.toString().split('\n');
@@ -179,8 +183,11 @@ const server = net.createServer((socket) => {
     if (index !== -1) {
       clients.splice(index, 1);
     }
-
+    if (socket.role === 'admin') {
+     adminAssigned = false;
+    }
     console.log(`Client ${socket.id} connection closed.`);
+     console.log(`Active clients:${clients.length}`);
   });
 
   socket.on('error', (err) => {
