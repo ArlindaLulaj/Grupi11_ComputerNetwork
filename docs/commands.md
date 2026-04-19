@@ -11,3 +11,7 @@ Klienti i pare qe lidhet me serverin merr rolin `admin`, ndersa klientet tjere m
 Komandat kryesore qe perdoren ne klient jane: `MESSAGE Pershendetje server`, `READ sample.txt`, `WRITE sample.txt Test nga admin`, `EXECUTE LIST` dhe `EXIT`. Komanda `MESSAGE` dergon mesazh tekst te serveri. Komanda `READ sample.txt` lexon file-in `sample.txt` nga folderi `server_files`. Komanda `WRITE sample.txt ...` shkruan ne file, por vetem nese klienti eshte admin. Komanda `EXECUTE LIST` shfaq listen e file-ve ne `server_files`, por vetem per admin. Komanda `EXIT` mbyll lidhjen e klientit me serverin.
 
 Per testim, fillimisht hapet serveri, pastaj hapet klienti i pare si admin dhe testohen komandat `READ sample.txt`, `WRITE sample.txt Test nga admin`, `READ sample.txt` dhe `EXECUTE LIST`. Pastaj hapet nje klient tjeter si read-only dhe testohen `READ sample.txt`, `WRITE sample.txt Test nga read only` dhe `EXECUTE LIST`. Rezultati i pritur eshte qe `READ` te funksionoje per te gjithe, ndersa `WRITE` dhe `EXECUTE` te funksionojne vetem per admin.
+
+Per siguri, serveri lejon qasje vetem ne folderin `server_files`. Nese klienti provon `READ ../server.js`, serveri duhet te ktheje `Invalid file name.` Kjo tregon se klientet nuk mund te lexojne file jashte folderit te lejuar.
+
+Nese klienti shfaq gabimin `ECONNREFUSED`, do te thote se serveri nuk eshte startuar ose IP/porti nuk jane te sakta. Nese serveri shfaq `EADDRINUSE`, do te thote se porti `5000` eshte duke u perdorur nga nje server tjeter dhe duhet mbyllur me `Ctrl + C`
