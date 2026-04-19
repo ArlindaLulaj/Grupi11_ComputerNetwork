@@ -1,1 +1,3 @@
-Ky eshte file testues per komanden READ.
+Ky eshte file testues ne server.
+Ky file perdoret per te testuar komanden READ nga klientet.
+Admini mund ta ndryshoje kete file me komanden WRITE.
